@@ -3,409 +3,281 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>날마다 교리 - 8월 14일 제6계명이 금지하는 죄</title>
+    <title>날마다 교리 - 제6계명이 금지하는 죄</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/static/pretendard.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/static/pretendard.min.css" />
     <style>
         body {
             font-family: 'Pretendard', sans-serif;
-            background-color: #f0f4f8;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
         .infographic-card {
             background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
             margin-bottom: 2rem;
-            overflow: hidden;
+            padding: 1.5rem;
             border-left-width: 8px;
             transition: all 0.3s ease-in-out;
         }
         .infographic-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
         }
         .icon-bg {
-            padding: 0.75rem;
-            border-radius: 8px;
-            display: inline-flex;
+            display: flex;
             align-items: center;
             justify-content: center;
+            border-radius: 9999px;
+            width: 3.5rem;
+            height: 3.5rem;
+            flex-shrink: 0;
         }
-        h3 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #1e40af;
-            margin-top: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-        .ask-question-btn {
-            background-color: #2563eb;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            font-weight: 600;
-            transition: background-color 0.2s;
-            float: right;
-            margin-top: 1rem;
-        }
-        .ask-question-btn:hover {
-            background-color: #1d4ed8;
-        }
-        /* Modal Styles */
-        #qa-modal-backdrop {
+        .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            right: 0;
+            bottom: 0;
             background-color: rgba(0, 0, 0, 0.5);
-            display: none;
+            display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 1000;
+            z-index: 50;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
         }
-        #qa-modal {
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-container {
             background-color: white;
-            border-radius: 12px;
+            border-radius: 0.75rem;
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
             width: 90%;
             max-width: 600px;
-            height: 80%;
-            max-height: 700px;
+            max-height: 80vh;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
             transform: scale(0.95);
-            opacity: 0;
-            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+            transition: transform 0.3s ease;
         }
-        #qa-modal.active {
+        .modal-overlay.active .modal-container {
             transform: scale(1);
-            opacity: 1;
         }
-        .modal-header {
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid #e5e7eb;
-            display: flex;
-            justify-content: space-between;
+        .chat-bubble-user {
+            background-color: #3B82F6; /* blue-500 */
+            color: white;
+            align-self: flex-end;
+        }
+        .chat-bubble-assistant {
+            background-color: #E5E7EB; /* gray-200 */
+            color: #1F2937; /* gray-800 */
+            align-self: flex-start;
+        }
+        .ask-question-btn {
+            background-color: #1E40AF; /* blue-800 */
+            color: white;
+            font-weight: bold;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            transition: background-color 0.2s;
+            cursor: pointer;
+            margin-top: 1.5rem;
+            display: inline-flex;
             align-items: center;
         }
-        #modal-title-text {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: #1e3a8a;
-            margin: 0;
+        .ask-question-btn:hover {
+            background-color: #1E3A8A; /* blue-900 */
         }
-        .close-modal-btn {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            font-weight: bold;
-            cursor: pointer;
-            color: #6b7280;
-        }
-        #chat-window {
-            flex-grow: 1;
-            padding: 1.5rem;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        .chat-bubble {
-            padding: 0.75rem 1rem;
-            border-radius: 12px;
-            max-width: 80%;
-            word-wrap: break-word;
-        }
-        .user-bubble {
-            background-color: #dbeafe;
-            color: #1e3a8a;
-            align-self: flex-end;
-            border-bottom-right-radius: 0;
-        }
-        .ai-bubble {
-            background-color: #f3f4f6;
-            color: #374151;
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
             align-self: flex-start;
-            border-bottom-left-radius: 0;
+            margin-left: 1rem;
+            margin-bottom: 0.5rem;
         }
-        .ai-bubble.thinking::after {
-            content: '...';
-            display: inline-block;
-            animation: thinking 1.5s infinite;
-        }
-        @keyframes thinking {
-            0%, 20% { content: '.'; }
-            40%, 60% { content: '..'; }
-            80%, 100% { content: '...'; }
-        }
-        .chat-input-area {
-            border-top: 1px solid #e5e7eb;
-            padding: 1rem;
-            display: flex;
-        }
-        #user-question-input {
-            flex-grow: 1;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            padding: 0.5rem 0.75rem;
-            margin-right: 0.5rem;
-        }
-        #send-question-btn {
-            background-color: #2563eb;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            padding: 0.5rem 1rem;
-            font-weight: 600;
-            cursor: pointer;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="bg-slate-50 text-slate-900">
 
-    <main class="max-w-4xl mx-auto">
-        <header class="text-center mb-12">
-            <p class="text-blue-600 font-semibold">8월 14일</p>
+    <main class="container mx-auto px-4 py-8 md:py-16">
+        <header class="text-center mb-12 md:mb-16">
             <h1 class="text-4xl md:text-5xl font-extrabold text-slate-800 mb-2">제6계명이 금지하는 죄</h1>
-            <p class="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto mt-2">생명의 존엄성을 훼손하는 모든 직접적, 간접적 행위와 내면의 죄악에 대한 포괄적인 해설</p>
+            <p class="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto mt-2">
+                생명을 해치는 모든 행위와 그 근원이 되는 내면의 죄까지, 제6계명이 금지하는 다양한 죄의 양상을 심도 있게 살펴봅니다.
+            </p>
         </header>
 
-        <section id="chapter-1" class="infographic-card" style="border-color: #ef4444;">
-            <div class="p-6 md:p-8">
-                <h2 class="flex items-center">
-                    <span class="icon-bg" style="background-color: #fee2e2;">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
-                        </svg>
-                    </span>
-                    <span class="ml-4 text-2xl font-bold text-slate-700">금지된 죄악의 범위</span>
-                </h2>
-                <div class="space-y-4 text-gray-700">
-                    <p>제6계명은 단순히 물리적인 살인 행위만을 금지하는 것이 아닙니다. 대요리문답 136항은 생명을 훼손하는 모든 형태의 죄를 포괄적으로 금지하고 있음을 명확히 합니다. 이는 소극적인 방치부터 내면의 악한 감정, 그리고 실제적인 폭력 행위에 이르기까지 광범위합니다.</p>
-                    <div class="bg-red-50 p-4 rounded-lg grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <h3 class="mt-0 text-red-800">소극적 죄악 (Sins of Omission)</h3>
-                            <ul class="list-disc list-inside space-y-1 mt-2 text-red-700">
-                                <li>생명 보존을 위한 합법적 수단을 게을리하거나 거두어들이는 행위</li>
-                                <li>타인의 곤궁함을 보고도 돕지 않는 것</li>
+        <div id="content-container">
+            <section class="infographic-card" style="border-color: #EF4444;" data-chapter-title="직접적 생명 침해 행위">
+                <div class="flex items-start">
+                    <div class="icon-bg" style="background-color: #FECACA;">
+                        <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
+                    </div>
+                    <div class="ml-4 flex-1">
+                        <h2 class="flex items-center">
+                            <span class="ml-4 text-2xl font-bold text-slate-700">직접적 생명 침해 행위</span>
+                        </h2>
+                        <div class="mt-3 text-base text-gray-700 space-y-3">
+                            <p>제6계명은 모든 종류의 생명 파괴 행위를 명백히 금지합니다. 이는 자신과 타인의 생명을 부당하게 앗아가는 모든 것을 포함하며, 그 방식과 대상에 따라 다양하게 나타납니다.</p>
+                            <ul class="list-disc list-inside space-y-2 pl-2">
+                                <li><strong>살인 행위:</strong> 공적인 재판이나 정당한 전쟁의 경우를 제외한 모든 살인 행위를 금합니다. 여기에는 타인의 생명을 앗아가는 것뿐만 아니라, 스스로 목숨을 끊는 행위도 포함됩니다.</li>
+                                <li><strong>생명 유지의 방임:</strong> 생명을 보존하기 위해 합법적이고 필요한 수단을 사용하지 않고 방치하는 것 또한 이 계명을 어기는 죄입니다.</li>
+                                <li><strong>죄악된 분노와 증오:</strong> 마음속의 시기, 미움, 복수심과 같은 사악한 감정들은 살인의 뿌리가 되므로 엄격히 금지됩니다.</li>
+                                <li><strong>과도한 행위:</strong> 무절제한 식탐, 폭음, 그리고 노동이나 여가 활동에서의 과도함은 자신의 생명을 해치는 행위로 간주됩니다.</li>
                             </ul>
                         </div>
-                        <div>
-                            <h3 class="mt-0 text-red-800">적극적 죄악 (Sins of Commission)</h3>
-                             <ul class="list-disc list-inside space-y-1 mt-2 text-red-700">
-                                <li>자살을 포함하여 부당하게 생명을 빼앗는 모든 행위</li>
-                                <li>죄악된 분노, 증오, 시기, 복수심</li>
-                                <li>폭력적인 말과 행동, 압제</li>
-                             </ul>
+                    </div>
+                </div>
+                <button class="ask-question-btn" aria-label="이 장에 대해 질문하기">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    질문하기
+                </button>
+            </section>
+            
+            <section class="infographic-card" style="border-color: #F97316;" data-chapter-title="간접적 생명 위협 행위">
+                <div class="flex items-start">
+                    <div class="icon-bg" style="background-color: #FED7AA;">
+                        <svg class="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </div>
+                    <div class="ml-4 flex-1">
+                        <h2 class="flex items-center">
+                            <span class="ml-4 text-2xl font-bold text-slate-700">간접적 생명 위협 행위</span>
+                        </h2>
+                        <div class="mt-3 text-base text-gray-700 space-y-3">
+                            <p>제6계명은 직접적인 살인 행위뿐만 아니라, 타인의 마음에 상처를 주거나 생명을 위협하는 분위기를 조성하는 모든 언어와 행동을 금합니다. 이는 관계를 파괴하고 영혼을 죽이는 행위로 이어질 수 있습니다.</p>
+                            <ul class="list-disc list-inside space-y-2 pl-2">
+                                <li><strong>마음을 상하게 하는 말:</strong> 조롱, 멸시, 비난과 같은 말은 상대방의 마음에 깊은 상처를 남기며, 이는 영적인 살인 행위로 간주될 수 있습니다.</li>
+                                <li><strong>압제와 다툼:</strong> 부당한 압제, 싸움, 구타 행위는 타인의 평온한 삶을 위협하고 신체적, 정신적 고통을 야기합니다.</li>
+                                <li><strong>유혹과 스캔들:</strong> 다른 사람을 죄에 빠지게 하는 모든 유혹과, 불의한 행위를 통해 다른 사람을 실족하게 만드는 것 역시 이 계명이 금하는 죄입니다.</li>
+                                <li><strong>정당방위의 원칙:</strong> 정당방위는 생명을 지키기 위한 행위이지만, "눈은 눈으로, 이는 이로"라는 보복법(Lex Talionis)은 개인이 사적으로 복수하는 것을 허용하지 않으며, 공적 재판을 통해 정의를 실현할 것을 가르칩니다.</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
-                <button class="ask-question-btn">이 장에 대해 질문하기</button>
-            </div>
-        </section>
+                <button class="ask-question-btn" aria-label="이 장에 대해 질문하기">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    질문하기
+                </button>
+            </section>
 
-        <section id="chapter-2" class="infographic-card" style="border-color: #f97316;">
-            <div class="p-6 md:p-8">
-                <h2 class="flex items-center">
-                    <span class="icon-bg" style="background-color: #ffedd5;">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                           <path stroke-linecap="round" stroke-linejoin="round" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </span>
-                    <span class="ml-4 text-2xl font-bold text-slate-700">내면의 죄: 분노와 증오</span>
-                </h2>
-                <div class="space-y-4 text-gray-700">
-                    <p>예수님께서는 산상수훈에서 살인죄의 뿌리가 마음에 있음을 가르치셨습니다. 제6계명은 외부로 드러나는 행동뿐만 아니라, 생명을 경시하는 모든 내면의 태도와 감정을 금합니다.</p>
-                    <blockquote class="p-4 my-4 border-l-4 border-gray-300 bg-gray-50">
-                        <p class="italic text-gray-800">"그 형제를 미워하는 자마다 살인하는 자니..." (요한일서 3:15)</p>
-                    </blockquote>
-                    <div class="grid md:grid-cols-2 gap-4">
-                        <div class="bg-orange-50 p-4 rounded-lg">
-                            <strong class="text-orange-800">죄악된 분노 (Sinful Anger)</strong>
-                            <p class="text-sm mt-1">정의롭지 못한 이유로, 혹은 정당한 이유일지라도 과도하게 품는 분노.</p>
-                        </div>
-                        <div class="bg-orange-50 p-4 rounded-lg">
-                             <strong class="text-orange-800">증오와 시기 (Hatred & Envy)</strong>
-                            <p class="text-sm mt-1">타인의 불행을 바라거나 잘됨을 질투하는 마음.</p>
-                        </div>
-                        <div class="bg-orange-50 p-4 rounded-lg">
-                             <strong class="text-orange-800">복수심 (Desire for Revenge)</strong>
-                            <p class="text-sm mt-1">받은 해에 대해 앙갚음하려는 마음.</p>
-                        </div>
-                         <div class="bg-orange-50 p-4 rounded-lg">
-                             <strong class="text-orange-800">무분별한 격정 (Rash Passions)</strong>
-                            <p class="text-sm mt-1">순간적인 감정을 제어하지 못해 폭력으로 이어지는 모든 격정.</p>
-                        </div>
+            <section class="infographic-card" style="border-color: #8B5CF6;" data-chapter-title="적용 질문">
+                <div class="flex items-start">
+                    <div class="icon-bg" style="background-color: #DDD6FE;">
+                        <svg class="w-8 h-8 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a2 2 0 01-2-2V7a2 2 0 012-2h4M9 12h6"></path></svg>
                     </div>
-                    <p>이러한 내면의 죄들은 그 자체로 하나님의 법을 어기는 것이며, 실제적인 폭력과 살인으로 발전할 수 있는 위험한 씨앗이 됩니다.</p>
-                </div>
-                <button class="ask-question-btn">이 장에 대해 질문하기</button>
-            </div>
-        </section>
-
-        <section id="chapter-3" class="infographic-card" style="border-color: #8b5cf6;">
-            <div class="p-6 md:p-8">
-                <h2 class="flex items-center">
-                    <span class="icon-bg" style="background-color: #ede9fe;">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-violet-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                           <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                        </svg>
-                    </span>
-                    <span class="ml-4 text-2xl font-bold text-slate-700">말과 행동의 죄</span>
-                </h2>
-                <div class="space-y-4 text-gray-700">
-                    <p>마음속의 악한 감정은 종종 말과 행동으로 표출되어 타인의 영혼과 육체에 상처를 입힙니다. 이러한 행위 역시 제6계명이 금하는 죄에 해당합니다.</p>
-                     <h3 class="mt-4">언어 폭력</h3>
-                    <ul class="list-disc list-inside space-y-2 pl-2">
-                        <li><strong>괴롭히는 말 (Vexing Words):</strong> 상대방을 고의로 괴롭히고 힘들게 하는 말.</li>
-                        <li><strong>조롱과 비웃음 (Scoffing & Scoffing):</strong> 타인을 멸시하고 비웃는 행위.</li>
-                        <li><strong>경솔한 비난 (Rash Censure):</strong> 충분한 근거 없이 성급하게 남을 판단하고 비난하는 것.</li>
-                        <li><strong>압제적인 말 (Oppressive Words):</strong> 권위나 힘을 이용하여 상대방을 억누르는 말.</li>
-                    </ul>
-                    <h3 class="mt-4">신체적 폭력</h3>
-                    <ul class="list-disc list-inside space-y-2 pl-2">
-                        <li><strong>다툼과 구타 (Quarrels & Blows):</strong> 물리적인 싸움과 폭행.</li>
-                        <li><strong>상해와 불구 만들기 (Maiming & Wounding):</strong> 신체에 상처를 입히거나 불구로 만드는 행위.</li>
-                        <li><strong>생명을 위협하는 모든 행위:</strong> 타인의 생명에 위협을 가하는 모든 행동.</li>
-                    </ul>
-                </div>
-                <button class="ask-question-btn">이 장에 대해 질문하기</button>
-            </div>
-        </section>
-
-        <section id="chapter-4" class="infographic-card" style="border-color: #10b981;">
-            <div class="p-6 md:p-8">
-                 <h2 class="flex items-center">
-                    <span class="icon-bg" style="background-color: #d1fae5;">
-                       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                        </svg>
-                    </span>
-                    <span class="ml-4 text-2xl font-bold text-slate-700">자기 파괴적인 행위</span>
-                </h2>
-                <div class="space-y-4 text-gray-700">
-                    <p>제6계명은 타인의 생명뿐만 아니라 자기 자신의 생명을 보존할 의무도 포함하므로, 자신의 몸과 마음을 해치는 행위 또한 금지합니다.</p>
-                    <div class="grid md:grid-cols-2 gap-4">
-                        <div class="bg-emerald-50 p-4 rounded-lg">
-                            <strong class="text-emerald-800">자살 (Self-murder)</strong>
-                            <p class="text-sm mt-1">스스로의 생명을 끊는 행위는 생명의 주인이신 하나님의 주권에 대한 명백한 도전입니다.</p>
-                        </div>
-                        <div class="bg-emerald-50 p-4 rounded-lg">
-                             <strong class="text-emerald-800">무절제한 생활 (Intemperance)</strong>
-                            <p class="text-sm mt-1">음식, 음료, 약물 등의 무분별한 사용으로 건강을 해치는 것.</p>
-                        </div>
-                        <div class="bg-emerald-50 p-4 rounded-lg">
-                             <strong class="text-emerald-800">과도한 노동과 오락 (Excessive Labor/Recreation)</strong>
-                            <p class="text-sm mt-1">몸을 돌보지 않는 지나친 노동이나, 건강을 해치는 무분별한 오락.</p>
-                        </div>
-                         <div class="bg-emerald-50 p-4 rounded-lg">
-                             <strong class="text-emerald-800">불필요한 위험 노출 (Needless Risk)</strong>
-                            <p class="text-sm mt-1">자신의 생명을 불필요한 위험에 고의로 노출시키는 행위.</p>
+                    <div class="ml-4 flex-1">
+                        <h2 class="flex items-center">
+                            <span class="ml-4 text-2xl font-bold text-slate-700">적용 질문</span>
+                        </h2>
+                        <div class="mt-3 text-base text-gray-700 space-y-3">
+                            <p>오늘의 교리를 삶에 적용하며 스스로에게 다음 질문들을 던져봅시다.</p>
+                            <ul class="list-decimal list-inside space-y-2 pl-2">
+                                <li>여러분은 제6계명이 단지 살인하는 것만을 금지하는 것이 아니라, 생명을 소홀히 하거나 위협하는 모든 행위를 금지한다는 것을 알고 있었습니까?</li>
+                                <li>여러분은 자신의 생명과 건강을 소홀히 대하지 않습니까? 무절제한 식탐, 폭음, 과로와 같은 일로 자신의 생명을 스스로 해치고 있지는 않습니까?</li>
+                                <li>여러분은 다른 사람의 생명을 해치는 일에 대하여 어느 정도의 책임을 느낍니까? 미워하고, 분노하고, 조롱하고, 멸시하고, 압제하는 일이 다른 사람의 생명을 해치는 죄라는 사실에 동의하십니까?</li>
+                                <li>정당방위에 대한 성경의 가르침을 어떻게 이해하십니까? 사적 복수와 공적 정의의 차이는 무엇이라고 생각하십니까?</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
-                <button class="ask-question-btn">이 장에 대해 질문하기</button>
-            </div>
-        </section>
+                <button class="ask-question-btn" aria-label="이 장에 대해 질문하기">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    질문하기
+                </button>
+            </section>
+        </div>
 
-        <section id="chapter-5" class="infographic-card" style="border-color: #f59e0b;">
-            <div class="p-6 md:p-8">
-                <h2 class="flex items-center">
-                    <span class="icon-bg" style="background-color: #fef3c7;">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    </span>
-                    <span class="ml-4 text-2xl font-bold text-slate-700">적용 질문</span>
-                </h2>
-                <div class="space-y-4 text-gray-700">
-                    <ol class="list-decimal list-inside space-y-3">
-                        <li>제6계명이 금지하는 죄는 실제 살인 행위 외에 어떤 것들이 있습니까? 오늘 학습한 내용에 근거하여 세 가지 이상을 들어 설명해 보십시오.</li>
-                        <li>예수님께서 "형제를 미워하는 자마다 살인하는 자"라고 말씀하신 이유는 무엇일까요? 마음의 죄가 실제 행동과 어떻게 연결되는지 생각해 봅시다.</li>
-                        <li>우리의 일상적인 말(농담, 비판, 뒷담화 등)이 어떻게 제6계명을 어기는 '살인'이 될 수 있을지 구체적인 예를 들어 이야기해 봅시다.</li>
-                        <li>자신의 건강을 돌보지 않는 것(과로, 과식, 수면 부족 등)이 왜 제6계명을 어기는 죄가 될 수 있는지 설명해 보십시오.</li>
-                    </ol>
-                </div>
-                <button class="ask-question-btn">이 장에 대해 질문하기</button>
-            </div>
-        </section>
-
-        <footer class="text-center mt-12 text-sm text-gray-500">
+        <footer class="text-center mt-16 text-sm text-gray-500">
             <p>교재는 날마다 양식으로 읽는 웨스트민스터 표준교리(영음사)를 사용합니다.</p>
         </footer>
-
     </main>
 
-    <div id="qa-modal-backdrop">
-        <div id="qa-modal">
-            <div class="modal-header">
-                <h2 id="modal-title-text">질문하기</h2>
-                <button class="close-modal-btn">&times;</button>
+    <div id="qa-modal" class="modal-overlay">
+        <div class="modal-container">
+            <div class="flex justify-between items-center p-4 border-b">
+                <h3 id="modal-title" class="text-xl font-bold text-slate-800">질문하기</h3>
+                <button id="close-modal-btn" class="text-gray-500 hover:text-gray-800">&times;</button>
             </div>
-            <div id="chat-window">
+            <div id="chat-window" class="flex-grow p-4 overflow-y-auto space-y-4">
                 </div>
-            <div class="chat-input-area">
-                <input type="text" id="user-question-input" placeholder="여기에 질문을 입력하세요...">
-                <button id="send-question-btn">전송</button>
+            <div class="p-4 border-t">
+                <div class="flex space-x-2">
+                    <input type="text" id="user-question-input" class="flex-grow border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="여기에 질문을 입력하세요...">
+                    <button id="send-question-btn" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-700 transition">전송</button>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const modalBackdrop = document.getElementById('qa-modal-backdrop');
-            const modal = document.getElementById('qa-modal');
-            const closeModalBtn = modal.querySelector('.close-modal-btn');
-            const askButtons = document.querySelectorAll('.ask-question-btn');
-            const modalTitle = document.getElementById('modal-title-text');
+            const qaModal = document.getElementById('qa-modal');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+            const userQuestionInput = document.getElementById('user-question-input');
+            const sendQuestionBtn = document.getElementById('send-question-btn');
             const chatWindow = document.getElementById('chat-window');
-            const userInput = document.getElementById('user-question-input');
-            const sendBtn = document.getElementById('send-question-btn');
-            
+            const modalTitle = document.getElementById('modal-title');
+
             let currentChapterContext = '';
             let currentChapterTitle = '';
 
-            const openModal = (chapterElement) => {
-                currentChapterTitle = chapterElement.querySelector('h2 > span:last-child').textContent.trim();
-                currentChapterContext = chapterElement.querySelector('.p-6, .p-8').innerText;
-                
-                modalTitle.textContent = `"${currentChapterTitle}"에 대해 질문하기`;
-                chatWindow.innerHTML = '<div class="ai-bubble">안녕하세요! 이 장의 내용에 대해 무엇이든 질문해주세요.</div>';
-                
-                modalBackdrop.style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-                setTimeout(() => modal.classList.add('active'), 10);
-            };
-
-            const closeModal = () => {
-                modal.classList.remove('active');
-                setTimeout(() => {
-                    modalBackdrop.style.display = 'none';
-                    document.body.style.overflow = 'auto';
-                }, 300);
-            };
-
-            askButtons.forEach(button => {
+            document.querySelectorAll('.ask-question-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
-                    const chapterSection = e.target.closest('section');
-                    openModal(chapterSection);
+                    const card = e.target.closest('.infographic-card');
+                    currentChapterTitle = card.dataset.chapterTitle;
+                    
+                    const contentElements = card.querySelectorAll('p, li');
+                    currentChapterContext = Array.from(contentElements).map(el => el.innerText).join('\n');
+                    
+                    modalTitle.innerText = `"${currentChapterTitle}"에 대해 질문하기`;
+                    chatWindow.innerHTML = ''; // Clear previous chat
+                    userQuestionInput.value = '';
+                    
+                    document.body.style.overflow = 'hidden';
+                    qaModal.classList.add('active');
+                    userQuestionInput.focus();
                 });
             });
 
+            function closeModal() {
+                document.body.style.overflow = '';
+                qaModal.classList.remove('active');
+            }
+
             closeModalBtn.addEventListener('click', closeModal);
-            modalBackdrop.addEventListener('click', (e) => {
-                if (e.target === modalBackdrop) {
+            qaModal.addEventListener('click', (e) => {
+                if (e.target === qaModal) {
                     closeModal();
                 }
             });
 
-            const handleQuestionSubmit = async () => {
-                const userQuestion = userInput.value.trim();
-                if (userQuestion === '') return;
+            sendQuestionBtn.addEventListener('click', handleQuestionSubmit);
+            userQuestionInput.addEventListener('keyup', (e) => {
+                if (e.key === 'Enter') {
+                    handleQuestionSubmit();
+                }
+            });
+
+            async function handleQuestionSubmit() {
+                const userQuestion = userQuestionInput.value.trim();
+                if (!userQuestion) return;
 
                 appendMessage(userQuestion, 'user');
-                userInput.value = '';
-
-                const thinkingBubble = appendMessage('', 'ai', true);
+                userQuestionInput.value = '';
+                showLoader();
 
                 const finalPrompt = `
                     당신은 [콘텐츠 주제]에 대해 설명하는 전문 AI 어시스턴트입니다. 아래에 명시된 두 가지 규칙의 우선순위를 반드시 지켜서 사용자의 질문에 답변해 주세요.
@@ -434,52 +306,47 @@
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ prompt: finalPrompt })
                     });
-                    
+
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
 
                     const data = await response.json();
                     
-                    let aiResponseText = '죄송합니다. 답변을 생성하는 데 문제가 발생했습니다.';
-                    if (data && data.candidates && data.candidates.length > 0 &&
-                        data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts.length > 0 &&
-                        data.candidates[0].content.parts[0].text) {
-                        aiResponseText = data.candidates[0].content.parts[0].text;
-                    }
+                    // Safely access the nested text property
+                    const answer = data?.candidates?.[0]?.content?.parts?.[0]?.text || '답변을 생성하는 데 문제가 발생했습니다.';
                     
-                    thinkingBubble.classList.remove('thinking');
-                    thinkingBubble.innerHTML = aiResponseText.replace(/\n/g, '<br>');
+                    hideLoader();
+                    appendMessage(answer, 'assistant');
 
                 } catch (error) {
-                    console.error('API Error:', error);
-                    thinkingBubble.classList.remove('thinking');
-                    thinkingBubble.textContent = '오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
+                    console.error('Error fetching API:', error);
+                    hideLoader();
+                    appendMessage('죄송합니다, API 요청 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.', 'assistant');
                 }
-            };
-
-            sendBtn.addEventListener('click', handleQuestionSubmit);
-            userInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' && !e.isComposing) {
-                    e.preventDefault();
-                    handleQuestionSubmit();
-                }
-            });
-
-            function appendMessage(text, sender, isThinking = false) {
-                const bubble = document.createElement('div');
-                bubble.classList.add('chat-bubble', sender === 'user' ? 'user-bubble' : 'ai-bubble');
-                
-                if (isThinking) {
-                    bubble.classList.add('thinking');
-                    bubble.textContent = '생각 중...';
-                } else {
-                    bubble.innerHTML = text.replace(/\n/g, '<br>');
-                }
-
-                chatWindow.appendChild(bubble);
+            }
+            
+            function appendMessage(text, sender) {
+                const messageDiv = document.createElement('div');
+                messageDiv.textContent = text;
+                messageDiv.className = `w-fit max-w-[85%] rounded-lg px-4 py-2 ${sender === 'user' ? 'chat-bubble-user' : 'chat-bubble-assistant'}`;
+                chatWindow.appendChild(messageDiv);
                 chatWindow.scrollTop = chatWindow.scrollHeight;
-                return bubble;
+            }
+
+            function showLoader() {
+                const loaderDiv = document.createElement('div');
+                loaderDiv.id = 'loader';
+                loaderDiv.className = 'loader';
+                chatWindow.appendChild(loaderDiv);
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+            }
+
+            function hideLoader() {
+                const loader = document.getElementById('loader');
+                if (loader) {
+                    loader.remove();
+                }
             }
         });
     </script>
